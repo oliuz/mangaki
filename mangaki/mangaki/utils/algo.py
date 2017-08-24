@@ -2,12 +2,14 @@ from mangaki.utils.wals import MangakiWALS
 from mangaki.utils.als import MangakiALS
 from mangaki.utils.knn import MangakiKNN
 from mangaki.utils.svd import MangakiSVD
+from mangaki.utils.svd2 import MangakiSVD2
 from mangaki.utils.data import Dataset
 
 
 ALGOS = {
     'knn': lambda: MangakiKNN(),
     'svd': lambda: MangakiSVD(20),
+    'svd2': lambda: MangakiSVD2(20),
     'als': lambda: MangakiALS(20),
     'wals': lambda: MangakiWALS(20),
 }
@@ -24,7 +26,7 @@ def fit_algo(algo_name, triplets, titles=None, categories=None):
     anonymized = dataset.make_anonymous_data(triplets)
     algo.set_parameters(anonymized.nb_users, anonymized.nb_works)
     algo.fit(anonymized.X, anonymized.y)
-    if algo_name in {'svd', 'als', 'knn'}:
+    if algo_name in {'svd', 'svd2', 'als', 'knn'}:
         algo.save(algo.get_backup_filename())
         dataset.save('ratings-' + algo.get_backup_filename())
     return dataset, algo
