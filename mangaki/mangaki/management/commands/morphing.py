@@ -20,14 +20,14 @@ for poster in posters:
 		poster_tags[index][tags_definition[tag]] = value
 
 def distance(a, b):
-	dist = (b-a)**2
-	return np.sqrt(np.sum(dist))
+	dist = (b - a)
+	return np.linalg.norm(dist)
 
 def dist2seg(point, a, segment):
-	seg_norm = np.sqrt(np.dot(segment, segment))
+	seg_norm = np.linalg.norm(segment)
 	current = point - a
 	projection = np.dot(current, segment)/seg_norm
-	dist2seg = distance(a, point) - projection**2
+	dist2seg = distance(a, point)**2 - projection**2
 	return np.sqrt(dist2seg)
 
 
@@ -37,9 +37,10 @@ def morphing(a, b, subdiv = 3):
 	morphism = [0] * (subdiv+2)
 	morphism[0] = a
 	morphism[subdiv+1] = b
-	for i in range (poster_tags.shape[0]):
+	nb_posters = poster_tags.shape[0]
+	for i in range (nb_posters):
 		# if the selected poster is in fact a poster and is neither the goal or the beginning
-		if i!=a and i!=b and i in index_posters:
+		if i != a and i != b and i in index_posters:
 			current = poster_tags[i] - poster_tags[a]
 			projection = np.dot(current, segment)/seg_norm
 			# if the projection is contained in the segment

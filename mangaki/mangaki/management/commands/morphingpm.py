@@ -13,7 +13,6 @@ for poster in posters:
 	index = int(poster[:len(poster)-4])
 	index_posters[i] = index
 	i += 1
-print(max(index_posters))
 poster_tags = np.zeros((max(index_posters)+1, nb_tags))
 for poster in posters:
 	index = int(poster[:len(poster)-4])
@@ -21,19 +20,20 @@ for poster in posters:
 		poster_tags[index][tags_definition[tag]] = value
 
 def distance(a, b):
-	dist = (b-a)**2
-	return np.sqrt(np.sum(dist))
+	dist = (b - a)
+	return np.linalg.norm(dist)
 
 def morphing(a, b, subdiv = 3):
 	segment = poster_tags[b] - poster_tags[a]
-	seg_norm = np.sqrt(np.dot(segment, segment))
+	seg_norm = np.linalg.norm(segment)
 	sub_middles = np.zeros((subdiv, nb_tags))
 	for i in range(subdiv):
 		sub_middles[i] = poster_tags[a] + segment * (i+1/2)/(subdiv)
 	morphism = [0] * (subdiv+2)
 	morphism[0] = a
 	morphism[subdiv+1] = b
-	for i in range (poster_tags.shape[0]):
+	nb_posters = poster_tags.shape[0]
+	for i in range (nb_posters):
 		# if the selected poster is in fact a poster and is neither the goal or the beginning
 		if i!=a and i!=b and i in index_posters:
 			current = poster_tags[i] - poster_tags[a]
